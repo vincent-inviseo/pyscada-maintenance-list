@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="maintenance-title">Liste de maintenance</h1>
+        </div>
+    </div>
+    <table class="maintenance-table table table-bordered table-striped table-responsive">
+        <thead>
+            <tr>
+                <th class="header" id="reference">Référence</th>
+                <th class="header" id="name">Nom</th>
+                <th class="header" id="periodic">Périodicité</th>
+                <th class="header" id="lastMaintenance">Date dernier entretien</th>
+                <th class="header" id="isConform">Conformité</th>
+                <th class="header" id="maintainer">Mainteneur</th>
+                <th class="header" id="report">Rapport</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for device in devices %}
+            <tr>
+                <td>{{device.reference}}</td>
+                <td>{{device.name}}</td>
+                <td>{{device.period}}</td>
+                <td>{{device.lastMaintenance}}</td>
+                <td>{{device.isConform}}</td>
+                <td>{{device.maintainer}}</td>
+                <td>
+                    <a target="_blank" href="{{device.report}}">{{device.report}}</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-12 margin-side-25">
+            <a target="_blank" href="/pyscada_admin/maintenancelist/maintenancedevice/add/">
+                <div class="pull-right btn-circle-add-maintenance glyphicon glyphicon-plus zoom"></div>
+            </a>
+        </div>
+    </div>
+</div>

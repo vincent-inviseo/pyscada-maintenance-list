@@ -1,0 +1,22 @@
+.btn-circle-add-maintenance {
+    display:block;
+    height: 65px;
+    cursor: pointer;
+    width: 65px;
+    color: white !important;
+    background-color: var(--couleur_sidebarBG);
+    text-align: center;
+    padding: 6px 0;
+    font-size: 25px;
+    line-height: 2 !important;
+    border-radius: 50%;
+  }
+
+  .margin-side-25 {
+    margin: 0 25px;
+  }
+.maintenance-table {
+    th {
+        cursor: pointer;
+    }
+}

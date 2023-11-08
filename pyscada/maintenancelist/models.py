@@ -17,23 +17,36 @@ maintenance_period_choices = (
     ("every 2 years", "every 2 years")
 )
 
+class MaintenanceDeviceType(WidgetContentModel):
+    
+    id = models.AutoField(primary_key=True)
+    type = models.CharField(verbose_name="Type of device", max_length=50)
+    
+    def __str__(self):
+        return self.type
+
+
+
 class MaintenanceDevice(WidgetContentModel):
 
     id = models.AutoField(primary_key=True)
-    reference = models.CharField(verbose_name="Reference", max_length=50, blank=True, null=True)
-    name = models.CharField(verbose_name="Title", max_length=100)
-    type = models.CharField(verbose_name="Type of device", max_length=50)
+    reference = models.CharField(verbose_name="Réference", max_length=50, blank=True, null=True)
+    name = models.CharField(verbose_name="Name", max_length=100)
+    type = models.ForeignKey(MaintenanceDeviceType, on_delete=models.DO_NOTHING, null=True, blank=True,)
     createdAt = models.DateTimeField(verbose_name="Created at", default=datetime.datetime.now)
-    updatedAt = models.TextField(verbose_name="Updated at", default=datetime.datetime.now, blank=True, null=True)
+    updatedAt = models.DateTimeField(verbose_name="Updated at", default=datetime.datetime.now, blank=True, null=True)
     period = models.CharField(verbose_name="Select maintenance period", choices=maintenance_period_choices, max_length=50)
     lastMaintenance = models.DateTimeField(verbose_name="Date last maintenance", blank=True, null=True)
     isConform = models.BooleanField(verbose_name="Device is conform after control", blank=False, null=False)
     maintainer = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True)
-    report = models.CharField(verbose_name="report url join", blank=True, null=True)
+    report = models.CharField(verbose_name="report url join", blank=True, null=True, max_length=150)
+    
+    class Meta:
+        ordering = ["-createdAt"]
     
 
     def __str__(self):
-        return self.title + "_" + self.type + "_" + str(self.id)
+        return self.name
     
 
     def gen_html(self, **kwargs):
@@ -47,12 +60,13 @@ class MaintenanceDevice(WidgetContentModel):
             dict(
                 uuid=uuid4().hex,
                 item=self,
+                devices=MaintenanceDevice.objects.all()
             )
         )
         opts = dict()
         opts["flot"] = False
-        opts["show_daterangepicker"] = True
-        opts["show_timeline"] = True
+        opts["show_daterangepicker"] = False
+        opts["show_timeline"] = False
         opts["object_config_list"] = set()
         opts["javascript_files_list"] = [STATIC_URL + "pyscada/js/maintenance-list.js",]
         opts["css_files_list"] = [STATIC_URL + "pyscada/css/maintenance-list.css",]
