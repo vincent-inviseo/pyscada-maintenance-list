@@ -17,7 +17,7 @@ maintenance_period_choices = (
     ("every 2 years", "every 2 years")
 )
 
-class MaintenanceDeviceType(WidgetContentModel):
+class MaintenanceDeviceType(models.Model):
     
     id = models.AutoField(primary_key=True)
     type = models.CharField(verbose_name="Type of device", max_length=50)
@@ -27,7 +27,7 @@ class MaintenanceDeviceType(WidgetContentModel):
 
 
 
-class MaintenanceDevice(WidgetContentModel):
+class MaintenanceDevice(models.Model):
 
     id = models.AutoField(primary_key=True)
     reference = models.CharField(verbose_name="Réference", max_length=50, blank=True, null=True)
@@ -49,6 +49,10 @@ class MaintenanceDevice(WidgetContentModel):
         return self.name
     
 
+class MaintenanceWidgetContent(WidgetContentModel):
+    
+    id = models.AutoField(primary_key=True)
+    
     def gen_html(self, **kwargs):
         """
         : return main template for energy display object
@@ -58,13 +62,10 @@ class MaintenanceDevice(WidgetContentModel):
         main_content = None
         main_content = main_template.render(
             dict(
-                uuid=uuid4().hex,
-                item=self,
                 devices=MaintenanceDevice.objects.all()
             )
         )
         opts = dict()
-        opts["flot"] = False
         opts["show_daterangepicker"] = False
         opts["show_timeline"] = False
         opts["object_config_list"] = set()
@@ -72,3 +73,6 @@ class MaintenanceDevice(WidgetContentModel):
         opts["css_files_list"] = [STATIC_URL + "pyscada/css/maintenance-list.css",]
 
         return main_content, None, opts
+    
+    def __str__(self):
+        return "Liste de maintenance"

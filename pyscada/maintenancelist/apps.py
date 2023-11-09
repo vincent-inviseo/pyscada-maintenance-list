@@ -16,4 +16,12 @@ class PyScadaThemeConfig(AppConfig):
     default_auto_field = "django.db.models.AutoField"
 
     def ready(self):
-        pass
+
+        try:
+            from .models import MaintenanceWidgetContent
+            if not MaintenanceWidgetContent.objects.count():
+                MaintenanceWidgetContent.objects.create() 
+        except ProgrammingError:
+            pass
+        except OperationalError:
+            pass  
