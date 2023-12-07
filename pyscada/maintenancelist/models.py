@@ -26,7 +26,6 @@ class MaintenanceDeviceType(models.Model):
         return self.type
 
 
-
 class MaintenanceDevice(models.Model):
 
     id = models.AutoField(primary_key=True)
@@ -36,10 +35,6 @@ class MaintenanceDevice(models.Model):
     createdAt = models.DateTimeField(verbose_name="Created at", default=datetime.datetime.now)
     updatedAt = models.DateTimeField(verbose_name="Updated at", default=datetime.datetime.now, blank=True, null=True)
     period = models.CharField(verbose_name="Select maintenance period", choices=maintenance_period_choices, max_length=50)
-    lastMaintenance = models.DateTimeField(verbose_name="Date last maintenance", blank=True, null=True)
-    isConform = models.BooleanField(verbose_name="Device is conform after control", blank=False, null=False)
-    maintainer = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True)
-    report = models.CharField(verbose_name="report url join", blank=True, null=True, max_length=150)
     
     class Meta:
         ordering = ["-createdAt"]
@@ -47,6 +42,24 @@ class MaintenanceDevice(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+
+class Maintenance(models.Model):
+    
+    id = models.AutoField(primary_key=True)
+    makedAt = models.DateTimeField(verbose_name="Make at", default=datetime.datetime.now)
+    isConform = models.BooleanField(verbose_name="Device is conform after control", blank=False, null=False)
+    maintainer = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True)
+    report = models.CharField(verbose_name="report url join", blank=True, null=True, max_length=150)
+    maintenanceDevice = models.ForeignKey(MaintenanceDevice, on_delete=models.CASCADE)
+    
+    class Meta:
+        ordering = ["-makedAt"]
+    
+
+    def __str__(self):
+        return self.maintenanceDevice.name + "-" + self.makedAt.date().strftime(format="%Y-%m-%d")
     
 
 class MaintenanceWidgetContent(WidgetContentModel):

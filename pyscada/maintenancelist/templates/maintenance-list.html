@@ -7,30 +7,22 @@
     <table class="maintenance-table table table-bordered table-striped table-responsive">
         <thead>
             <tr>
+                <th class="header" id="reference">ID</th>
                 <th class="header" id="reference">Référence</th>
                 <th class="header" id="name">Nom</th>
                 <th class="header" id="name">Type</th>
                 <th class="header" id="periodic">Périodicité</th>
-                <th class="header" id="lastMaintenance">Date dernier entretien</th>
-                <th class="header" id="isConform">Conformité</th>
-                <th class="header" id="maintainer">Mainteneur</th>
-                <th class="header" id="report">Rapport</th>
             </tr>
         </thead>
         <tbody>
             {% for device in devices %}
-            <tr>
-                <td>{{device.reference}}</td>
-                <td>{{device.name}}</td>
-                <td>{{device.type}}</td>
-                <td>{{device.period}}</td>
-                <td>{{device.lastMaintenance}}</td>
-                <td>{{device.isConform}}</td>
-                <td>{{device.maintainer}}</td>
-                <td>
-                    <a target="_blank" href="{{device.report}}">{{device.report}}</a>
-                </td>
-            </tr>
+                <tr class="line-hover">
+                    <td><a href="{% url 'device-informations' device.id %}">{{device.id}}</a>
+                    <td>{{device.reference}}</td>
+                    <td>{{device.name}}</td>
+                    <td>{{device.type}}</td>
+                    <td>{{device.period}}</td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>

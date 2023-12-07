@@ -20,3 +20,11 @@
         cursor: pointer;
     }
 }
+
+.line-hover {
+  cursor: pointer;
+}
+
+.line-hover:hover {
+  background-color: aquamarine;
+}
