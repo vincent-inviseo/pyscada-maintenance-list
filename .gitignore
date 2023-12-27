@@ -1,0 +1,8 @@
+# Ignore les dossiers se terminant par .egg-info
+**/*.egg-info/
+
+# Ignore le dossier __pycache__
+__pycache__
+
+# Ignore tous les dossiers nommés build
+build/
