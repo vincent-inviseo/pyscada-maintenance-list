@@ -28,3 +28,8 @@
 .line-hover:hover {
   background-color: aquamarine;
 }
+
+/* On veut que le hover des th de classe "header" soit en "pointer" */
+.header:hover {
+  cursor: pointer;
+}
