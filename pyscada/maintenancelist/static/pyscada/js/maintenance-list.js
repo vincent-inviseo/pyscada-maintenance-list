@@ -1,29 +1,3 @@
-// Structure de la table des maintenances :
-
-{/* <table class="maintenance-table table table-bordered table-striped table-responsive">
-<thead>
-    <tr>
-        <th class="header" id="reference">Date</th>
-        <th class="header" id="name">Conforme</th>
-        <th class="header" id="maintainer">Mainteneur</th>
-        <th class="header" id="report">Rapport</th>
-    </tr>
-</thead>
-<tbody>
-   {% for maintenance in maintenances %}
-    <td data-column="reference">{{maintenance.makedAt}}</td>
-    <td data-column="name">{{maintenance.isConform}}</td>
-    <td data-column="maintainer">{{maintenance.maintainer}}</td>
-    <td data-column="report">
-        <a target="_blank" href="{{maintenance.report}}">{{maintenance.report}}</a>
-    </td>
-    
-    {% endfor %}
-</tbody> 
-</table> */}
-
-// Objectif : faire qu'un clic sur un header de colonne trie la table selon cette colonne, et qu'un clic sur le même header inverse le tri.
-
 // 1. Récupérer les headers de colonne
 const headers = document.querySelectorAll('.header');
 
