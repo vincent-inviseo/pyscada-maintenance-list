@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{% static "pyscada/css/maintenance-list.css" %}">
 
 {% endblock %}
+
 {% block navbar %}
     <!-- Side bar -->
     <nav id="sidebar">
@@ -19,7 +20,13 @@
             {% block navbar_logo %}{% endblock %}
         </div>
         <ul class="list-unstyled components">
-            {% block top_menu_left %}{% endblock %}
+            {% block top_menu_left %}
+            {% for page in page_list %}
+                <li>
+                    <a href="#{{ page }}" class="hidden-xs">{{ page.title|safe }}</a>
+                </li>
+            {% endfor %}
+            {% endblock %}
             {% block top_menu_left_collapsed %}{% endblock %}
         </ul>
         <ul class="list-unstyled CTAs">

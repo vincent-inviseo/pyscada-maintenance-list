@@ -17,7 +17,7 @@
         <tbody>
             {% for device in devices %}
                 <tr class="line-hover">
-                    <td><a href="{% url 'device-informations' device.id %}">{{device.id}}</a>
+                    <td><a href="{% url 'device-informations' device.id link_title %}">{{device.id}}</a>
                     <td>{{device.reference}}</td>
                     <td>{{device.name}}</td>
                     <td>{{device.type}}</td>
