@@ -1,7 +1,28 @@
-// 1. Récupérer les headers de colonne
+// Dans toutes les balises de type <select>, il y a des options qui sont en double. Il faut les supprimer
+function removeDuplicates(select) {
+    let options = select.options;
+    let values = [];
+    for (let i = 0; i < options.length; i++) {
+        if (values.includes(options[i].value)) {
+            options[i].remove();
+            i--;
+        } else {
+            values.push(options[i].value);
+        }
+    }
+}
+
+// Parcours de tous les <select> de la page, et suppression des doublons
+const selects = document.querySelectorAll('select');
+selects.forEach(select => removeDuplicates(select));
+
+
+// ----------------------------------------------------------------------------------------------
+// TRI DU TABLEAU
+// ----------------------------------------------------------------------------------------------
+
 const headers = document.querySelectorAll('.header');
 
-// 2. Pour chaque header, ajouter un écouteur d'événement qui trie la table selon la colonne
 headers.forEach(header => {
     header.addEventListener('click', () => {
         const table = header.parentElement.parentElement.parentElement;
@@ -11,12 +32,11 @@ headers.forEach(header => {
     });
 });
 
-// 3. Fonction de tri de la table
 function sortTable(table, headerIndex, isAscending) {
     const tbody = table.querySelector('tbody');
     const rows = Array.from(tbody.querySelectorAll('tr'));
 
-    // 3.1. Fonction de comparaison de deux lignes
+    // Comparaison de deux lignes
     const comparator = (row1, row2) => {
         const cell1 = row1.querySelectorAll('td')[headerIndex];
         const cell2 = row2.querySelectorAll('td')[headerIndex];
@@ -25,17 +45,14 @@ function sortTable(table, headerIndex, isAscending) {
         return value1.localeCompare(value2, undefined, {numeric: true, sensitivity: 'base'});
     };
 
-    // 3.2. Tri des lignes
+    // Tri des lignes
     rows.sort(comparator);
     if (!isAscending) {
         rows.reverse();
     }
-
-    // 3.3. Remplacement des lignes dans le DOM
     tbody.innerHTML = '';
     rows.forEach(row => tbody.appendChild(row));
 
-    // 3.4. Mise à jour des classes CSS
     table.querySelectorAll('.header').forEach(header => header.classList.remove('ascending', 'descending'));
     const header = table.querySelector(`.header:nth-child(${headerIndex + 1})`);
     if (isAscending) {
@@ -45,9 +62,63 @@ function sortTable(table, headerIndex, isAscending) {
     }
 }
 
-// 4. Tri initial de la table
+// Tri par défaut quand on arrive sur la page
 const table = document.querySelector('.maintenance-table');
 const header = table.querySelector('.header');
-sortTable(table, 0, true);
+sortTable(table, 0, false);
 header.click();
+
+// ----------------------------------------------------------------------------------------------
+// FILTRES DU TABLEAU
+// ----------------------------------------------------------------------------------------------
+
+const referenceFilter = document.getElementById("reference-filter");
+const nameFilter = document.getElementById("name-filter");
+const typeFilter = document.getElementById("type-filter");
+const periodicityFilter = document.getElementById("periodicity-filter");
+
+referenceFilter.addEventListener("change", updateTable);
+nameFilter.addEventListener("keyup", updateTable);
+typeFilter.addEventListener("change", updateTable);
+periodicityFilter.addEventListener("change", updateTable);
+
+function updateTable() {
+    // Récupérer les valeurs des filtres
+    const referenceValue = referenceFilter.value;
+    const nameValue = nameFilter.value.toUpperCase();
+    const typeValue = typeFilter.value;
+    const periodicityValue = periodicityFilter.value;
+
+    const table = document.querySelector('.maintenance-table');
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+
+    // Cacher les lignes qui ne correspondent pas aux filtres
+    rows.forEach(row => {
+        const reference = row.querySelectorAll('td')[1].textContent.trim();
+        const name = row.querySelectorAll('td')[2].textContent.trim().toUpperCase();
+        const type = row.querySelectorAll('td')[3].textContent.trim();
+        const periodicity = row.querySelectorAll('td')[4].textContent.trim();
+
+        const referenceMatch = reference.includes(referenceValue);
+        const nameMatch = name.includes(nameValue);
+        const typeMatch = type.includes(typeValue);
+        const periodicityMatch = periodicity.includes(periodicityValue);
+
+        if (!referenceMatch || !nameMatch || !typeMatch || !periodicityMatch) {
+            row.style.display = 'none';
+        } else {
+            row.style.display = '';
+        }
+    });
+}
+
+// onclick() du bouton "Nettoyer les filtres"
+function clearFilters() {
+    referenceFilter.value = '';
+    nameFilter.value = '';
+    typeFilter.value = '';
+    periodicityFilter.value = '';
+    updateTable();
+}
 
