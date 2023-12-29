@@ -1,3 +1,22 @@
+// Dans toutes les balises de type <select>, il y a des options qui sont en double. Il faut les supprimer
+function removeDuplicates(select) {
+    let options = select.options;
+    let values = [];
+    for (let i = 0; i < options.length; i++) {
+        if (values.includes(options[i].value)) {
+            options[i].remove();
+            i--;
+        } else {
+            values.push(options[i].value);
+        }
+    }
+}
+
+// Parcours de tous les <select> de la page, et suppression des doublons
+const selects = document.querySelectorAll('select');
+selects.forEach(select => removeDuplicates(select));
+
+
 // ----------------------------------------------------------------------------------------------
 // TRI DU TABLEAU
 // ----------------------------------------------------------------------------------------------
