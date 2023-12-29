@@ -4,6 +4,52 @@
             <h1 class="maintenance-title">Liste de maintenance</h1>
         </div>
     </div>
+
+    <div class="row filter-row">
+        <div class="col-md-3">
+            <label for="reference-filter">Référence:</label>
+            <select class="form-control" id="reference-filter" name="reference">
+                <option value="">Toutes les références</option>
+                {% for device in devices %}
+                    <option value="{{ device.reference }}">{{ device.reference }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="name-filter">Nom:</label>
+            <input type="text" class="form-control" id="name-filter" name="name">
+        </div>
+        <div class="col-md-3">
+            <label for="type-filter">Type:</label>
+            <select class="form-control" id="type-filter" name="type">
+                <option value="">Tous les types</option>
+                {% for device in devices %}
+                    <option value="{{ device.type }}">{{ device.type }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="periodicity-filter">Périodicité:</label>
+            <select class="form-control" id="periodicity-filter" name="periodicity">
+                <option value="">Toutes les périodicités</option>
+                {% for device in devices %}
+                    <option value="{{ device.period }}">{{ device.period }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    {% comment %} Ajouter un bouton "Nettoyer les filtres" {% endcomment %}
+    <div class="row">
+        <button type="button" class="btn btn-primary btn-filter" onclick="clearFilters()">Nettoyer les filtres</button>
+    </div>
+    
+
+
+
+</div>
+
+
+<div class="container">
     <table class="maintenance-table table table-bordered table-striped table-responsive">
         <thead>
             <tr>
@@ -17,7 +63,7 @@
         <tbody>
             {% for device in devices %}
                 <tr class="line-hover">
-                    <td><a href="{% url 'device-informations' device.id link_title %}">{{device.id}}</a>
+                    <td><a href="{% url 'device-informations' device.id %}">{{device.id}}</a>
                     <td>{{device.reference}}</td>
                     <td>{{device.name}}</td>
                     <td>{{device.type}}</td>

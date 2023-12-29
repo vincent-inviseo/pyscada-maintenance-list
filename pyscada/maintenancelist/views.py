@@ -3,7 +3,7 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from .models import MaintenanceDevice, Maintenance
-from pyscada.hmi.models import Page
+
 
 logger = logging.getLogger(__name__)
 
@@ -24,24 +24,23 @@ def unauthenticated_redirect(func):
 
 
 @unauthenticated_redirect
-def device_informations(request, device_id, link_title):
+def device_informations(request, device_id):
     
     device = MaintenanceDevice.objects.get(pk=device_id)
     maintenances = Maintenance.objects.filter(maintenanceDevice_id=device_id)
     fields = device._meta.get_fields() 
     
-    page_list = Page.objects.all()
+    # Initialisation des listes pour les filtres
+    seen_references = list({device.reference for device in MaintenanceDevice.objects.all()})
+    seen_types = list({device.type for device in MaintenanceDevice.objects.all()})
+    seen_periods = list({device.period for device in MaintenanceDevice.objects.all()})
     
     context={
         "device": device,
         "maintenances": maintenances,
-        "fields": fields,
-        "page_list": page_list,
-        "link_title": link_title
+        "fields": fields
     }
     
     return TemplateResponse(
         request, "device-maintenance-list.html", context=context
     )
-    
-    
