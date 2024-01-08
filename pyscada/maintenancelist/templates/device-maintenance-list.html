@@ -1,167 +1,22 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load i18n static %}
-{% load custom_filters %}
 {% block head_css %}
     {% include "sidebar_theme_css.html" %}
     <link rel="stylesheet" href="{% static "pyscada/css/maintenance-list.css" %}">
 
 {% endblock %}
 
-{% block navbar %}
-    <!-- Side bar -->
-    <nav id="sidebar">
-        <div class="sidebar-header">
-            {% block sidebar_logo %}
-                <a href="javascript:;">
-                    <img id="logo-inviseo" src="{% static "pyscada/img/logo-inviseo-light.png" %}"
-                         alt="logo">
-                </a>
-            {% endblock %}
-            {% block navbar_logo %}{% endblock %}
-        </div>
-        <ul class="list-unstyled components">
-            {% block top_menu_left %}
-            {% for page in page_list %}
-                <li>
-                    <a href="#{{ page }}" class="hidden-xs">{{ page.title|safe }}</a>
-                </li>
-            {% endfor %}
-            {% endblock %}
-            {% block top_menu_left_collapsed %}{% endblock %}
-        </ul>
-        <ul class="list-unstyled CTAs">
-        </ul>
-        {% block sidebar_sites %}
-            {% include "sidebar_sites.html" %}
-        {% endblock %}
-    </nav>
-    <!-- Top bar -->
-    <nav id="navbar-top"
-         class="topbar sidebarActive navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <button type="button"
-                    class="navbar-toggle topBarCollapse"
-                    data-toggle="collapse"
-                    data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="nav navbar-right navbar-nav">
-                    <!--<li><a href="#page-help">Help</a></li>-->
-                    <li>
-                        <a href="javascript:;" style="padding-left:0px; padding-right:0px;width:40px;height:30px;display: none;"><img class="loadingAnimation" style="display: inline-block; height: 14px;" src="/static/pyscada/img/load.gif" alt="loading" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Initialisation"></a>
-                    </li>
-                    <li class="AutoUpdateButtonParent" style="margin-right:25px;">
-                        <input class="AutoUpdateButton hidden" type="checkbox" data-inverse="true" data-size="mini" data-on-color="success" data-off-color="default" checked>
-                    </li>
-                    <li style="width:40px;height:30px;display: none;">
-                        <a href="javascript:;" ><span class="ReadAllTask glyphicon glyphicon-refresh" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Send request data to all devices"></span></a>
-                    </li>
-                    <li style="width:40px;height:40px;display: none;">
-                        <a href="javascript:;" ><span class="AutoUpdateStatus glyphicon glyphicon-transfer" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Data transfer"></span></a>
-                    </li>
-                    {% block user_dropdown %}
-                        {% include "user_dropdown.html" %}
-                    {% endblock %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-{% endblock %}
-
-{% block include_bottom %}
-    {% for js_file in javascript_files_list %}
-        <script language="javascript" type="text/javascript" src={{ js_file.src }}></script>
-    {% endfor %}
-    <script type="text/javascript">
-        $(document).ready(function () {
-            document.querySelector(".footer").classList.add('sidebarActive');
-            document.querySelector("#content").classList.add('sidebarActive');
-            $('.sidebarCollapse').on('click', function () {
-                $('#sidebar').toggleClass('active');
-                document.querySelector("#content").classList.toggle('sidebarActive');
-                document.querySelector(".topbar").classList.toggle('sidebarActive');
-                document.querySelector(".footer").classList.toggle('sidebarActive');
-            });
-        });
-    </script>
-
-    
-{% endblock %}
-{% block top_menu_right %}
-    <li>
-        <a id="page-load-label">Loading...</a>
-    </li>
-    <li>
-        <meter id="page-load-state"
-               value="0"
-               min="0"
-               max="100"
-               style="padding-top: 15px">0</meter>
-    </li>
-    {% for panel in control_list %}
-        {% if panel.visible %}
-            <li class="dropdown">
-                <!-- {{ panel.title|upper }} -->
-                <a class="dropdown-toggle" href="#" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span> {{ panel.title }}<strong class="caret"></strong></a>
-                <div class="dropdown-menu" style="padding: 15px; width:715px;">
-                    <div class="control-panel">
-                        {% for item in panel.control_panel.items.all %}
-                            {% if item.pk in visible_control_element_list %}
-                                {% include "control_element.html" with item=item %}
-                            {% endif %}
-                        {% endfor %}
-                        {% for form in panel.control_panel.forms.all %}
-                            {% if form.pk in visible_form_list %}
-                                {% include "form.html" with form=form %}
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-            </li>
-        {% endif %}
-    {% endfor %}
-    <li class="dropdown">
-        <!-- Date range picker -->
-        <a class="daterangepicker_parent hidden"
-           id="daterange"
-           style="padding-top: 5px;
-                  cursor: pointer;
-                  width: 100%">
-            <i class="glyphicon glyphicon-calendar"></i>&nbsp;
-            <span>Date range picker is loading. Please wait...</span> <strong class="caret"></strong>
-        </a>
-    </li>
-    <!-- Charts timeline -->
-    <!--      <li class="dropdown">
-            <a class="dropdown-toggle timeline hidden" id="timeline_slider" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-resize-horizontal"></span> Timeline slider <strong class="caret"></strong></a>
-            <div class="dropdown-menu" style="padding: 15px; width: 50vw;">
-                <div class='col-md-12 col-sm-12' data-toggle="tooltip" data-placement="top" title="" data-original-title="Display data filter">
-                    <div id="timeline-border" class="form-group" style="height:34px; background-color: #9d9d9d;">
-                        <div id="timeline" class="ui-widget-content ui-resizable ui-draggable ui-draggable-handle" style="background-color: #333; width: 100%; height: 34px; left: 0px; top: 0px;">
-                            <span class="pull-left glyphicon glyphicon-triangle-left" style="line-height:30px;color:#9d9d9d;" aria-hidden="true"></span>
-                            <span class="pull-right glyphicon glyphicon-triangle-right" style="line-height:30px;color:#9d9d9d;" aria-hidden="true"></span>
-                            <span id="timeline-time-from-label" class="pull-left" style="padding-left:3px; line-height:34px; color:#9d9d9d"> </span>
-                            <span id="timeline-time-to-label" class="pull-right" style="padding-right:3px; line-height:34px; color:#9d9d9d"> </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </li>-->
-{% endblock %}
-
 {% block content %}
+
 <div class="container">
     <div class="device-infos">
         <div class="row">
             <div class="panel panel-primary col-md-3">
                 <div class="panel-heading">
-                  <h3 class="panel-title">{{device.reference}} {{device.name}}</h3>
+                  <h3 class="panel-title" id="device-page-title">{{device.name}} - {{device.reference}}</h3>
                 </div>
                 <div class="panel-body">
-                    <ul class="list-group">
+                    <ul class="list-group" id="device-informations">
                         <li class="list-group-item"><b>ID</b>: {{device.id}}</li>
                         <li class="list-group-item"><b>Référence</b>: {{device.reference}}</li>
                         <li class="list-group-item"><b>Nom</b>: {{device.name}}</li>
@@ -177,7 +32,7 @@
 
     <div class="row">
         <div class="col-12">
-            <h1 class="maintenance-title">Historique de maintenance {{device.reference}}-{{device.name}}</h1>
+            <h1 class="maintenance-title" id="maintenace-list-device-title">Maintenance {{device.name}}</h1>
         </div>
     </div>
     <table class="maintenance-table table table-bordered table-striped table-responsive">
@@ -189,15 +44,13 @@
                 <th class="header" id="report">Rapport</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="maintenance-container">
             {% for maintenance in maintenances %}
             <tr>
                 <td>{{maintenance.makedAt}}</td>
                 <td>{{maintenance.isConform}}</td>
                 <td>{{maintenance.maintainer}}</td>
-                <td>
-                    <a target="_blank" href="{{maintenance.report}}">{{maintenance.report}}</a>
-                </td>
+                <td><a target="_blank" href="{{maintenance.report}}"">{{maintenance.report}}</a></td>
             </tr>
             {% endfor %}
         </tbody>
@@ -209,8 +62,6 @@
             </a>
         </div>
     </div>
-
 </div>
-
 <script type="text/javascript" src="{% static "pyscada/js/maintenance-list.js" %}"></script>
 {% endblock %}
