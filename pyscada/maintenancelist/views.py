@@ -1,5 +1,6 @@
 import logging
 from django.conf import settings
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from .models import MaintenanceDevice, Maintenance
@@ -23,9 +24,7 @@ def unauthenticated_redirect(func):
     return wrapper
 
 
-@unauthenticated_redirect
 def device_informations(request, device_id):
-    
     device = MaintenanceDevice.objects.get(pk=device_id)
     maintenances = Maintenance.objects.filter(maintenanceDevice_id=device_id)
     fields = device._meta.get_fields() 
@@ -37,10 +36,7 @@ def device_informations(request, device_id):
     
     context={
         "device": device,
-        "maintenances": maintenances,
-        "fields": fields
+        "maintenances": maintenances
     }
     
-    return TemplateResponse(
-        request, "device-maintenance-list.html", context=context
-    )
+    return TemplateResponse(request, 'device-maintenance-list.html', context)

@@ -1,10 +1,19 @@
+{% load static %}
+{% block head_css %}
+    {% include "sidebar_theme_css.html" %}
+    <link rel="stylesheet" href="{% static "pyscada/css/maintenance-list.css" %}">
+
+{% endblock %}
+<!-- Head -->
 <div class="container">
     <div class="row">
         <div class="col-12">
             <h1 class="maintenance-title">Liste de maintenance</h1>
         </div>
     </div>
+<!-- End Head -->
 
+<!-- Filters -->
     <div class="row filter-row">
         <div class="col-md-3">
             <label for="reference-filter">Référence:</label>
@@ -42,13 +51,10 @@
     <div class="row">
         <button type="button" class="btn btn-primary btn-filter" onclick="clearFilters()">Nettoyer les filtres</button>
     </div>
-    
-
-
-
 </div>
+<!-- End filters -->
 
-
+<!-- Table maintenance device -->
 <div class="container">
     <table class="maintenance-table table table-bordered table-striped table-responsive">
         <thead>
@@ -63,7 +69,7 @@
         <tbody>
             {% for device in devices %}
                 <tr class="line-hover">
-                    <td><a href="{% url 'device-informations' device.id %}">{{device.id}}</a>
+                    <td><a href="{% url 'device-informations' device.id %}">{{device.id}}</a></td>
                     <td>{{device.reference}}</td>
                     <td>{{device.name}}</td>
                     <td>{{device.type}}</td>
@@ -80,3 +86,4 @@
         </div>
     </div>
 </div>
+<!-- End table maintenanc device -->
