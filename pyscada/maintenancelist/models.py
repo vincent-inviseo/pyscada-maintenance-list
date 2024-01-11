@@ -13,6 +13,7 @@ maintenance_period_choices = (
     ("every month", "every month"),
     ("each 3 months", "each 3 months"),
     ("each 4 months", "each 4 months"),
+    ("each 6 months", "each 6 months"),
     ("each year", "each year"),
     ("every 2 years", "every 2 years")
 )
