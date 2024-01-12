@@ -54,11 +54,12 @@ git clone git@github.com:vincent-inviseo/pyscada-maintenance-list.git
 source /home/pyscada/.venv/bin/activate
 # Install plugin
 sudo -u pyscada -E env PATH=${PATH} pip3 install -e ./pyscada-maintenance-list
-```
-
-After restart gunicorn
-```
-systemctl restart guncorn
+# Run migrations
+python3 /var/www/pyscada/PyScadaServer/manage.py migrate
+# Copy static files
+sudo -u pyscada -E env PATH=${PATH} python3 /var/www/pyscada/PyScadaServer/manage.py collectstatic
+# Restart gunicorn
+sudo systemctl restart gunicorn
 ```
 
 ## How to use
