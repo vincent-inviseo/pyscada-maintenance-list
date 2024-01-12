@@ -31,11 +31,13 @@ class MaintenanceDevice(models.Model):
 
     id = models.AutoField(primary_key=True)
     reference = models.CharField(verbose_name="Réference", max_length=50, blank=True, null=True)
+    locate = models.CharField(verbose_name="Device location", max_length=50, blank=True, null=True)
     name = models.CharField(verbose_name="Name", max_length=100)
     type = models.ForeignKey(MaintenanceDeviceType, on_delete=models.DO_NOTHING, null=True, blank=True,)
     createdAt = models.DateTimeField(verbose_name="Created at", default=datetime.datetime.now)
     updatedAt = models.DateTimeField(verbose_name="Updated at", default=datetime.datetime.now, blank=True, null=True)
     period = models.CharField(verbose_name="Select maintenance period", choices=maintenance_period_choices, max_length=50)
+    description = models.TextField(verbose_name="Description", max_length=2500, blank=True, null=True)
     
     class Meta:
         ordering = ["-createdAt"]
@@ -53,7 +55,7 @@ class Maintenance(models.Model):
     isConform = models.BooleanField(verbose_name="Device is conform after control", blank=False, null=False)
     maintainer = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True)
     report = models.CharField(verbose_name="report url join", blank=True, null=True, max_length=150)
-    maintenanceDevice = models.ForeignKey(MaintenanceDevice, on_delete=models.CASCADE)
+    maintenanceDevice = models.ForeignKey(MaintenanceDevice, verbose_name="Select device", on_delete=models.CASCADE)
     
     class Meta:
         ordering = ["-makedAt"]
