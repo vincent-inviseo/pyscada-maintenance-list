@@ -25,11 +25,13 @@ That's the place you will register devices (fire detector, elevator, extinguishe
 To add a device fill form with properties :
 
 - `Reference`: (optional) Indicate here a device's reference like own internal code (ref_001), serial number or other. This field it's an arbitrary value
+- `Locate`: (optional) Indicate here where is the device (for example `technical room floor 1`)
 - `Name`: (required) Indicate  freindly name for common usages (securitydoor_west01)
 - `Type`: (optional) Select a type previously registred
 - `Created at`: (required) Indicate here when you have registered device. By default it's current date and time but you can select later or older
 - `Updated at`: (optional) Indaicate here last time device was updated. By default it's current date and time but you can select as you want
 - `Select maintenance period`: Select a maintenance frequency (each month, each 3 months, each 4 months, each year, each 2 years)
+- `description`: (optional) You can put here anythings about the device. For example you can write all maintenances will do or technical description
 
 ### Maintenance
 
